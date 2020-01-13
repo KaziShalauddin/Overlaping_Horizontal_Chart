@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+<body>
+
+        <canvas id="myChart"></canvas>
+<br/>
+        <canvas id="chartjs-2" class="chartjs" width="1155" height="577" style="display: block; height: 385px; width: 770px;"></canvas>
+       
+        <br/>
+        <a href="https://jsfiddle.net/zk0w5snu/" target="_blank">External Link for Overlaping Bar Chart</a>
+        <canvas id="chartjs-3"></canvas>
+        <br/>
+
+        <a href="https://jsfiddle.net/karthiksd9/17hvoa9t/8/" target="_blank">New Link</a>
+        <br/>
+       
+        <a href="https://jsfiddle.net/17hvoa9t/12/" target="_blank">New  2</a>
+
+        <br/>
+       
+        <a href="https://jsfiddle.net/rotxq5ks/5/" target="_blank">New Link 3</a>
+        <br/>
+
+        <a href="https://stackoverflow.com/questions/52929074/d3-horizontal-grouped-stacked-chart-bars-overlap-for-a-small-number-of-values" target="_blank">D3 Horizontal grouped stacked chart bars overlap for a small number of values</a>
+        <br/>
+        <a href="https://github.com/chartjs/Chart.js/issues/5224" target="_blank">Overlapping Bar Chart with Smaller Inner Bar & Thicker Outer Bar using 2.7.1</a>
+
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+        <script type="text/javascript">
+        
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+    // The type of chart we want to create
+   // type: 'line',
+    type: 'horizontalBar',
+    // The data for our dataset
+    data: {
+        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+        datasets: [{
+            label: 'My First dataset',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [0, 10, 5, 2, 20, 30, 45]
+        }]
+    },
+
+    // Configuration options go here
+    options: {}
+});
+        </script>
+        <script>
+            new Chart(document.getElementById("chartjs-2"),{
+                "type":"horizontalBar",
+                "data":{"labels":["January","February","March","April","May","June","July"],
+                "datasets":[
+                    {"label":"My First Dataset",
+                    "data":[65,59,80,81,56,55,40],
+                    "fill":false,
+                    "backgroundColor":["rgba(255, 99, 132, 0.2)","rgba(255, 159, 64, 0.2)","rgba(255, 205, 86, 0.2)","rgba(75, 192, 192, 0.2)","rgba(54, 162, 235, 0.2)","rgba(153, 102, 255, 0.2)","rgba(201, 203, 207, 0.2)"],
+                    "borderColor":["rgb(255, 99, 132)","rgb(255, 159, 64)","rgb(255, 205, 86)","rgb(75, 192, 192)","rgb(54, 162, 235)","rgb(153, 102, 255)","rgb(201, 203, 207)"],
+                    "borderWidth":1,
+                    
+                    }]
+                    },
+                "options":{
+                    "scales":{
+                        "xAxes":[{"ticks":{"beginAtZero":true}}]}
+                        }
+                    });
+        </script>
+
+        <script>
+                var data = {
+            labels: ["x1"],
+            datasets: [
+            {
+                    label: "2018",
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderWidth: 0,
+                    data: [30],
+                    xAxisID: "bar-x-axis2",                    
+                    stack: "background",
+                    barThickness: 6,
+                },
+                {
+                    label: "2019",
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderWidth: 1,
+                    data: [40],
+                    xAxisID: "bar-x-axis2",
+                    stack: "background"
+                },
+                // {
+                //     label: "2020",
+                //     backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                //     borderWidth: 0,
+                //     data: [100],
+                //     xAxisID: "bar-x-axis2"
+                // }
+            ]
+        };
+
+        var options = {
+            scales: {
+                xAxes: [
+                    {
+                        id: "bar-x-axis2",
+                        stacked: true,
+                        categoryPercentage: 0.5,
+                        barPercentage: 0.5
+                        // ,
+                        // gridLines: {
+                        //     offsetGridLines: true
+                        // }
+                    },
+                    {
+                        display: true,
+                        stacked: true,
+                        id: "bar-x-axis1",
+                        type: 'category',
+                        categoryPercentage: 0.4,
+                        barPercentage: 1,
+                        gridLines: {
+                            offsetGridLines: true
+                        }
+                    }
+                ],
+
+                yAxes: [{
+                    id: "bar-y-axis1",
+                    stacked: false,
+                    ticks: {
+                        beginAtZero: true
+                    }
+                    
+                }]
+
+            }
+        };
+
+        var ctx = document.getElementById("chartjs-3").getContext("2d");
+        var myBarChart = new Chart(ctx, {
+            type: 'horizontalBar',
+            data: data,
+            options: options
+        });
+        </script>
+</body>
+</html>
