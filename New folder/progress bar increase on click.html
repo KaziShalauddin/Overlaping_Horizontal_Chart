@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+<style>
+.clickable {
+    border: 1px solid #333;
+    background: #eee;
+    height: 40px;
+    width: 200px;
+    margin: 15px;
+    position: relative;
+}
+.display {
+    height: 16px;
+    position: absolute;
+    width: 100%;
+}
+.progress {
+    position:absolute;
+    left:0;
+    top:0;
+    background:green;
+    height:40px;
+    width:10px;
+}
+</style>
+
+<style>
+
+          .media-progress {
+            /*BG*/
+            position: relative;
+            width: 75%;
+            display: inline-block;
+            cursor: pointer;
+            height: 14px;
+            background: gray;
+            border: none;
+            vertical-align: middle;
+          }
+
+          .media-progress::-webkit-progress-bar {
+            /*Chrome-Safari BG*/
+            background: gray;
+            border: none
+          }
+
+          .media-progress::-webkit-progress-value {
+            /*Chrome-Safari value*/
+            background: #17BAB3;
+            border: none
+          }
+
+          .media-progress::-moz-progress-bar {
+            /*Firefox value*/
+            background: #17BAB3;
+            border: none
+          }
+
+          .media-progress::-ms-fill {
+            /*IE-MS value*/
+            background: #17BAB3;
+            border: none
+          }
+</style>
+    </head>
+<body>
+
+
+  <div class='clickable'>
+    <div class='display'>
+        <div class="progress"></div>
+    </div>
+</div>
+<div  style="margin-left: 20px;">
+<progress value="5" max="100" class="media-progress"></progress>
+<div id="progress-value"></div>
+
+</div>
+
+<script  src="https://code.jquery.com/jquery-3.4.1.min.js"  integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="  crossorigin="anonymous"></script>
+
+    <script type="text/javascript">
+        
+        $('.clickable').bind('click', function (ev) {
+            var $div = $(ev.target);
+            var $display = $div.find('.display');
+
+            var offset = $div.offset();
+            var x = ev.clientX - offset.left;
+
+            $('.progress').width(x);
+      });
+
+
+        </script>
+
+        <script>
+        $(document).ready(function() {
+
+            $(".media-progress").on("click", function(e) {
+
+              var max = $(this).width(); //Get width element
+              var pos = e.pageX - $(this).offset().left; //Position cursor
+              var dual = Math.round(pos / max * 100); // Round %
+
+
+              if (dual > 100) {
+                var dual = 100;
+              }
+
+
+              $(this).val(dual);
+              $("#progress-value").text(dual);
+
+            });
+
+
+        });
+        </script>
+</body>
+</html>
