@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+
+<head>
+	<title>Stacked Bar Chart</title>
+    <script src="Chart.js"></script>
+    
+    <!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> -->
+
+	<script src="utils.js"></script>
+	<style>
+	canvas {
+		-moz-user-select: none;
+		-webkit-user-select: none;
+		-ms-user-select: none;
+	}
+	</style>
+</head>
+
+<body>
+	<!-- <div style="width: 75%;">
+    </div> -->
+    <canvas id="canvas"></canvas>
+
+	<button id="randomizeData">Randomize Data</button>
+	<script>
+		var barChartData = {
+            // labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            labels: ['2019','2020'],
+
+		// 	datasets: [{
+        //         label: 'Actual',
+        //          barThickness:40,
+        //         //barPercentage:2,
+        //         //xAxisID: "bar-x-axis2", 
+		// 		backgroundColor: window.chartColors.red,
+		// 		data: [
+        //             10,20
+		// 			//randomScalingFactor(),
+		// 			// randomScalingFactor(),
+		// 			// randomScalingFactor(),
+		// 			// randomScalingFactor(),
+		// 			// randomScalingFactor(),
+		// 			// randomScalingFactor(),
+		// 			// randomScalingFactor()
+		// 		]
+		// 	}, {
+        //         label: 'Target',
+        //         barThickness:40,
+        //        // xAxisID: "bar-x-axis2"
+		// 		backgroundColor: window.chartColors.blue,
+		// 		data: [
+        //            20,40
+		// 			//randomScalingFactor(),
+		// 			// randomScalingFactor(),
+		// 			// randomScalingFactor(),
+		// 			// randomScalingFactor(),
+		// 			// randomScalingFactor(),
+		// 			// randomScalingFactor(),
+		// 			// randomScalingFactor()
+		// 		]
+        //     }            
+        // ]
+
+        datasets: [
+        {
+            label: "First",
+            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+            borderWidth: 1,
+            data: [10,20],
+            xAxisID: "bar-x-axis1",
+            yAxisID:"bar-y-axis1"
+        },        
+        {
+            label: "Second",
+            backgroundColor: 'rgba(255, 206, 86, 0.2)',
+            borderWidth: 1,
+            data: [5,30],
+            xAxisID: "bar-x-axis1",	 // will not work if set to 'bar-x-axis2'
+            yAxisID:"bar-y-axis1"
+        }
+    ]
+
+		};
+		window.onload = function() {
+			var ctx = document.getElementById('canvas').getContext('2d');
+			window.myBar = new Chart(ctx, {
+				type: 'horizontalBar',
+				data: barChartData,
+				options: {
+					title: {
+						display: true,
+						text: 'Chart.js Bar Chart - Stacked'
+					},
+					tooltips: {
+						mode: 'index',
+						intersect: false
+					},
+					responsive: true,
+					scales: {
+						xAxes: [
+                           // {stacked: true,}
+                    // {
+                    //     id: "bar-x-axis2",
+                    //     stacked: true,
+                    //     categoryPercentage: 0.5,
+                    //     barPercentage: 0.5
+                    // },
+
+                    {
+                  stacked: true,
+                  id: "bar-x-axis1",
+                  barThickness : 70,
+                },
+                {
+                    stacked: true,
+                    id: "bar-x-axis2",
+                     barThickness : 90,
+                }
+                        ],
+						yAxes: [
+                            //{ stacked: true	}
+
+                             { 
+                                stacked: true,
+                                id: "bar-y-axis1",
+                                barThickness: 30,
+                                }, 
+                                {
+                                display: false,
+                                stacked: true,
+                                id: "bar-y-axis2",
+                                barThickness: 70,
+                                // these are needed because the bar controller defaults set only the first x axis properties
+                                type: 'category',
+                                categoryPercentage: 2,
+                                barPercentage: 0.9,
+                                // gridLines: {
+                                //     offsetGridLines: true
+                                // }
+                                
+                                }
+                       ]
+                 }
+				}
+			});
+		};
+
+		document.getElementById('randomizeData').addEventListener('click', function() {
+			barChartData.datasets.forEach(function(dataset) {
+				dataset.data = dataset.data.map(function() {
+					return randomScalingFactor();
+				});
+			});
+			window.myBar.update();
+		});
+	</script>
+</body>
+
+</html>
