@@ -1,0 +1,361 @@
+﻿<!doctype html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <title>chartjs-plugin-labels</title>
+    <link href="Roboto Slab.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="style.css">
+    
+    <script src="Chart.js"></script>  
+    <script type="text/javascript" src="chartjs-plugin-labels.js"></script> 
+    <script src="utils.js"></script>
+    <style type="text/css">/* Chart.js */
+  /*
+   * DOM element rendering detection
+   * https://davidwalsh.name/detect-node-insertion
+   */
+  @keyframes chartjs-render-animation {
+    from { opacity: 0.99; }
+    to { opacity: 1; }
+  }
+  
+  .chartjs-render-monitor {
+    animation: chartjs-render-animation 0.001s;
+  }
+  
+  /*
+   * DOM element resizing detection
+   * https://github.com/marcj/css-element-queries
+   */
+  .chartjs-size-monitor,
+  .chartjs-size-monitor-expand,
+  .chartjs-size-monitor-shrink {
+    position: absolute;
+    direction: ltr;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+    z-index: -1;
+  }
+  
+  .chartjs-size-monitor-expand > div {
+    position: absolute;
+    width: 1000000px;
+    height: 1000000px;
+    left: 0;
+    top: 0;
+  }
+  
+  .chartjs-size-monitor-shrink > div {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    left: 0;
+    top: 0;
+  }
+  </style></head><body>
+  
+  
+  
+  
+    <div id="header">
+      <h1>chartjs-plugin-labels</h1>
+    </div>
+    <div id="body">
+      <div id="description">
+        <p>
+          Chart.js plugin to display labels on pie, doughnut and polar area chart.
+        </p>
+      </div>
+
+      <div class="charts">
+        
+          <div class="row">
+
+            <div class="chart-wrapper">
+              <!-- <iframe class="chartjs-hidden-iframe" tabindex="-1" style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe> -->
+              <canvas id="doughnut-canvas3" width="450" height="345" style="display: block; height: 230px; width: 300px;"></canvas>
+            </div>
+            
+          </div>
+
+          <div class="row">
+
+              <div class="chart-wrapper">
+                <canvas id="chart-area" width="450" height="345" style="display: block; height: 230px; width: 300px;"></canvas>
+              </div>
+              
+            </div>
+          <button id="addDataset">Add Dataset</button>
+
+        </div>
+    </div>
+    <div id="footer">
+      © 2017-2018 chartjs-plugin-labels Demo
+    </div>
+    <script>
+//       function componentToHex(c) {
+//   var hex = c.toString(16);
+//   return hex.length == 1 ? "0" + hex : hex;
+// }
+
+// function rgbToHex(r, g, b) {
+//   return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+// }
+
+function componentFromStr(numStr, percent) {
+      var num = Math.max(0, parseInt(numStr, 10));
+      return percent ?
+          Math.floor(255 * Math.min(100, num) / 100) : Math.min(255, num);
+  }
+
+  function rgbToHex(rgb) {
+      var rgbRegex = /^rgb\(\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*\)$/;
+      var result, r, g, b, hex = "";
+      if ( (result = rgbRegex.exec(rgb)) ) {
+          r = componentFromStr(result[1], result[2]);
+          g = componentFromStr(result[3], result[4]);
+          b = componentFromStr(result[5], result[6]);
+
+          hex = "#" + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+      }
+      return hex;
+  };
+
+      function hexToRgb(hex) {
+        debugger;
+        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+          return r + r + g + g + b + b;
+         
+        });
+  
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+      }
+  
+      function createChart(id, type, options) {
+        //debugger;
+         var data = {
+          labels: ['Dhaka', 'Gazipur', 'Savar'],
+          datasets: [
+            {
+              label: 'My First dataset',
+              data: [50445, 33655, 15900],
+              backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56'
+              ]
+            }
+          ]
+        };
+        //drawChart(type,data,options);
+        drawChart();
+        // new Chart(document.getElementById(id), {          
+        //   type: type,
+        //   data: dataArray,
+        //   options: options
+        // });
+
+      }
+      var type = 'doughnut';
+  // var data = {
+  //         labels: ['Dhaka', 'Gazipur', 'Savar'],
+  //         datasets: [
+  //           {
+  //             label: 'My First dataset',
+  //             data: [50445, 33655, 15900],
+  //             backgroundColor: [
+  //               '#FF6384',
+  //               '#36A2EB',
+  //               '#FFCE56'
+  //             ]
+  //           }
+  //         ]
+  //       };
+        var config = {
+           
+			    data: {
+              datasets:  [
+                  {
+                    label: '2020',
+                    data: [60000, 40000, 20000],
+                    backgroundColor: [
+                      '#FF6384',
+                      '#36A2EB',
+                      '#FFCE56'
+                    ]
+                  }
+                ],
+                labels: ['Dhaka', 'Gazipur', 'Savar'],
+            }
+		      };
+function drawChart(){
+ 
+ 
+  var options={
+             responsive: true,  maintainAspectRatio: false, plugins: {
+                                                                      labels: {
+                                                                        render: 'percentage',
+                                                                        fontColor: function (args) {
+                                                                          var rgb ;
+                                                                          if(args.dataset.backgroundColor[args.index].length==17){
+                                                                            debugger;
+                                                                          var a = rgbToHex(args.dataset.backgroundColor[args.index]);
+                                                                          rgb=hexToRgb(a);
+                                                                          }
+                                                                          else{
+                                                                            rgb = hexToRgb(args.dataset.backgroundColor[args.index]);
+                                                                          }                                                                          var threshold = 140;
+                                                                          var luminance = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+                                                                          //return luminance > threshold ? 'black' : 'white';
+                                                                          return luminance > threshold ? 'black' : 'black';
+
+                                                                        },
+                                                                        precision: 2
+                                                                      }
+                                                                    }
+        };
+  var ctx = document.getElementById('chart-area').getContext('2d');
+ // debugger;
+  window.myDoughnut = new Chart(ctx, {          
+          type: type,
+          data:config.data,
+          options: options
+        });
+};
+
+      ['doughnut'].forEach(function (type) { 
+        createChart(
+          type + '-canvas3', 
+          type,
+          {
+             responsive: true,  maintainAspectRatio: false, plugins: {
+                                                                      labels: {
+                                                                        render: 'percentage',
+                                                                        fontColor: function (args) {
+                                                                          debugger;
+                                                                          var rgb = hexToRgb(args.dataset.backgroundColor[args.index]);
+                                                                          var threshold = 140;
+                                                                          var luminance = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+                                                                          return luminance > threshold ? 'black' : 'white';
+                                                                        },
+                                                                        precision: 2
+                                                                      }
+                                                                    }
+        });        
+      });
+
+    </script>
+     <script>
+//   var config = {
+//             type: 'doughnut',
+// 			data: {
+// 				datasets: [{
+// 					data: [
+// 						randomScalingFactor(),
+// 						randomScalingFactor(),
+// 						randomScalingFactor(),
+// 						// randomScalingFactor(),
+// 						// randomScalingFactor(),
+// 					],
+// 					backgroundColor: [
+// 						window.chartColors.red,
+// 						//window.chartColors.orange,
+// 						window.chartColors.yellow,
+// 						//window.chartColors.green,
+// 						window.chartColors.blue,
+// 					],
+// 					label: 'Dataset 1'
+// 				}],
+// 				labels: [
+// 					'Red',
+// 					//'Orange',
+// 					'Yellow',
+//                     //'Green',
+// 					'Blue'
+// 				]
+// 			},
+// 			options: {
+// 				responsive: true,
+// 				legend: {
+// 					position: 'top',
+// 				},
+// 				title: {
+// 					display: true,
+// 					text: 'Chart.js Doughnut Chart'
+// 				},
+// 				animation: {
+// 					animateScale: true,
+// 					animateRotate: true
+//         },
+//         // plugins: {
+//         //                                                               labels: {
+//         //                                                                 render: 'percentage',
+//         //                                                                 fontColor: function (args) {
+//         //                                                                   var rgb = hexToRgb(args.dataset.backgroundColor[args.index]);
+//         //                                                                   var threshold = 140;
+//         //                                                                   var luminance = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+//         //                                                                   return luminance > threshold ? 'black' : 'white';
+//         //                                                                 },
+//         //                                                                 precision: 2
+//         //                                                               }
+//         //                                                             }
+
+// 			}
+// 		};
+//   window.onload = function() {
+//       var ctx = document.getElementById('chart-area').getContext('2d');
+// //createChart(ctx,config.type,config.options);
+//       window.myDoughnut = new Chart(ctx, config);
+//            // Chart.plugins.unregister(ChartDataLabels);
+
+// 		};
+       var randomScalingFactor = function() {
+			return Math.round(Math.random() * 100);
+		};
+
+		
+     document.getElementById('addDataset').addEventListener('click', function() {
+       debugger;
+			// var newDataset = {
+			// 	backgroundColor: [],
+			// 	data: [],
+      //   label: 'New dataset ' + config.data.datasets.length,
+      //  // label: 'New dataset ' + data.datasets.length,
+
+			// };
+
+      var newDataset = {
+        backgroundColor: ['#FF6384','#36A2EB','#FFCE56'],
+				data: [60655, 33655, 16000],
+        label: '2019'
+			};
+
+    //  var colorNames = Object.keys(window.chartColors);
+		// for (var index = 0; index < config.data.labels.length; ++index) {
+    //     //for (var index = 0; index < data.labels.length; ++index) {
+		// 		newDataset.data.push(randomScalingFactor());
+
+		// 		var colorName = colorNames[index % colorNames.length];
+		// 		var newColor = window.chartColors[colorName];
+		// 		newDataset.backgroundColor.push(newColor);
+		// 	}
+
+			config.data.datasets.push(newDataset);
+      window.myDoughnut.update();		
+      //window.doughnut.update();		
+	
+
+		});
+     </script>
+  </body></html>

@@ -1,0 +1,228 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>chartjs-plugin-labels</title>
+    <link href="Roboto Slab.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="style.css">
+    <!-- <script
+    src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous"></script> -->
+    <script src="Chart.js"></script>
+    <script type="text/javascript" src="chartjs-plugin-labels.js"></script>
+
+    <style type="text/css">
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .chartjs-render-monitor {
+            animation: chartjs-render-animation 0.001s;
+        }
+
+        .chartjs-size-monitor,
+        .chartjs-size-monitor-expand,
+        .chartjs-size-monitor-shrink {
+            position: absolute;
+            direction: ltr;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+            visibility: hidden;
+            z-index: -1;
+        }
+
+            .chartjs-size-monitor-expand > div {
+                position: absolute;
+                width: 1000000px;
+                height: 1000000px;
+                left: 0;
+                top: 0;
+            }
+
+            .chartjs-size-monitor-shrink > div {
+                position: absolute;
+                width: 200%;
+                height: 200%;
+                left: 0;
+                top: 0;
+            }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <h1>chartjs-plugin-labels</h1>
+    </div>
+    <div id="body">
+        <div id="description">
+            <p>
+                Chart.js plugin to display labels on pie, doughnut and polar area chart.
+            </p>
+        </div>
+
+        <div class="charts">
+
+            <div class="row">
+
+                <div class="chart-wrapper">
+                    <canvas id="chart-area" width="450" height="345" style="display: block; height: 230px; width: 300px;"></canvas>
+                </div>
+
+            </div>
+            <button id="addDataset">Add Dataset</button>
+
+        </div>
+    </div>
+    <div id="footer">
+        © 2017-2018 chartjs-plugin-labels Demo
+    </div>
+    <script>
+
+        function componentFromStr(numStr, percent) {
+            var num = Math.max(0, parseInt(numStr, 10));
+            return percent ?
+                Math.floor(255 * Math.min(100, num) / 100) : Math.min(255, num);
+        }
+        function rgbToHex(rgb) {
+            var rgbRegex = /^rgb\(\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*,\s*(-?\d+)(%?)\s*\)$/;
+            var result, r, g, b, hex = "";
+            if ((result = rgbRegex.exec(rgb))) {
+                r = componentFromStr(result[1], result[2]);
+                g = componentFromStr(result[3], result[4]);
+                b = componentFromStr(result[5], result[6]);
+
+                hex = "#" + (0x1000000 + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            }
+            return hex;
+        };
+
+        function hexToRgb(hex) {
+            //debugger;
+            // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+            var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+            hex = hex.replace(shorthandRegex, function (m, r, g, b) {
+                return r + r + g + g + b + b;
+
+            });
+
+            var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        }
+// 5432
+//8663
+//9051
+//9942
+//2337
+        var config = {
+            type: 'doughnut',
+            data: {
+                datasets: [
+                    {
+                        label: '2020',
+                        data: [60000, 40000, 20000],
+                        backgroundColor: ['#FF6384','#36A2EB','#FFCE56']
+                        
+                    },
+                    {
+                      label: '2019',
+                      data: [60655, 33655, 16000],
+                      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56']
+                    }
+                ],
+                labels: ['Dhaka', 'Gazipur', 'Savar'],
+            },
+            options: {
+             onClick: graphClickEvent,
+
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    labels: {
+                        render: 'percentage',
+                        fontColor: function (args) {
+                            var rgb = hexToRgb(args.dataset.backgroundColor[args.index]);
+                            var threshold = 140;
+                            var luminance = 0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b;
+                            return luminance > threshold ? 'black' : 'black';
+
+                        },
+                        precision: 2
+                    }
+                }
+            }
+        };
+
+        function graphClickEvent(event, array){
+           // debugger;
+    // if(array[0]){
+    //    foo.bar;
+    // }
+    console.log(exports$4.getBody(event, array));
+    //alert("Clicked!")
+}
+
+        window.onload = function () {
+
+            var ctx = document.getElementById('chart-area').getContext('2d');
+
+            window.myDoughnut = new Chart(ctx, {
+                type: config.type,
+                data: config.data,
+                options: config.options
+            });
+
+          
+        };
+  
+    //     document.getElementById('chart-area').onclick = function(evt,array) {
+    //       debugger;
+    //    var activePoints = window.myDoughnut.getElementAtEvent(evt);
+
+    //   if (activePoints[0]) {
+    //     var chartData = activePoints[0]['_chart'].config.data;
+    //     var idx = activePoints[0]['_index'];
+
+    //     var label = chartData.labels[idx];
+    //     var value = chartData.datasets[0].data[idx];
+
+    //     var url = "label=" + label + " & value=" + value;
+    //      console.log(url);
+    //     alert(url);
+    //  }
+    //      var me = window.myDoughnut;
+    //     // var helper=me.defaults._set('doughnut',2);
+    //     //  console.log(helper);
+
+    //     //var a= me.tooltips.label;
+	// 	//var callbacks = me._options.callbacks;
+    // };
+        document.getElementById('addDataset').addEventListener('click', function () {
+            //debugger;
+            var newDataset = {
+                backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+                data: [60655, 33655, 16000],
+                label: '2019'
+            };
+
+            config.data.datasets.push(newDataset);
+            window.myDoughnut.update();
+        });
+    </script>
+</body>
+</html>

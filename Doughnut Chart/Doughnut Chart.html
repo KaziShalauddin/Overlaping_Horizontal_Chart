@@ -1,0 +1,111 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Doughnut Chart</title>
+    <!-- <link href="Roboto Slab.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="style.css"> -->
+    <script src="Chart.js"></script>  
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>  
+    <script src="utils.js"></script>
+    <style>
+
+.container {
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+@media (min-width: 768px) {
+  .container {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .container {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .container {
+    width: 1170px;
+  }
+}
+
+
+    .column {
+  float: left;
+  width: 25%;
+  padding: 0 10px;
+}
+
+/* Responsive columns */
+@media screen and (max-width: 600px) {
+  .column {
+    width: 100%;
+    display: block;
+    margin-bottom: 20px;
+  }
+}
+
+/* Style the counter cards */
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  padding: 16px;
+  text-align: center;
+  background-color: #f1f1f1;
+}
+    </style>
+</head>
+
+<body>
+<div class="container" style="padding-top: 20px;">
+    <div class="column">
+        <div class="card">
+             <canvas id="chartjs-4" class="chartjs"  style="display: block; height: 75px; width: 70px;"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+    
+
+    new Chart(document.getElementById("chartjs-4"),{"type":"doughnut",plugins: [ChartDataLabels],"data":{"labels":["Red","Blue","Yellow"],"datasets":[{"label":"My First Dataset","data":[300,50,100],"backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)","rgb(255, 205, 86)"]}]}});
+   //var ChartDataLabels=;
+    // new Chart(document.getElementById("chartjs-4"),{"type":"doughnut",
+    // plugins: {dataLabels:{
+    //             formatter: (value, ctx) => {
+                
+    //               let sum = 0;
+    //               let dataArr = ctx.chart.data.datasets[0].data;
+    //               dataArr.map(data => {
+    //                   sum += data;
+    //               });
+    //               let percentage = (value*100 / sum).toFixed(2)+"%";
+    //               return percentage;
+
+              
+    //             },
+    //             color: '#fff',
+    //                  }},
+    // "data":{"labels":["Red","Blue","Yellow"],"datasets":[{"label":"My First Dataset","data":[300,50,100],"backgroundColor":["rgb(255, 99, 132)","rgb(54, 162, 235)","rgb(255, 205, 86)"]}]}});
+
+    Chart.plugins.unregister(ChartDataLabels);
+    Chart.helpers.merge(Chart.defaults.global.plugins.datalabels, {
+        // color: 'blue',
+        //         labels: {
+        //             title: {
+        //                 font: {
+        //                     weight: 'bold'
+        //                 }
+        //             },
+                    value: {
+                        color: 'green'
+                    }
+});
+
+
+</script>
+</body>
+
+</html>

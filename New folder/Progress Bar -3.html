@@ -2,114 +2,114 @@
 <html>
     <head>
             
-            <style>
+      <style>
                                       
-                /* Mobile Styles */
-                @media only screen and  (max-width: 1018px) {
-                        .current-roll-css {
-                                        
-                                        margin-top: -35px;
-                                        margin-left: -95px;
-                                    }
-                    }
-                  
-                    /* Tablet Styles */
-                  
-                    @media only screen and (min-width: 1019px) and (max-width: 1023px) {
-                        .current-roll-css {
-                                        
-                                        margin-top: -35px;
-                                        margin-left: -100px;
-                                    }
-                    }
-                    @media only screen and (min-width: 1024px) and (max-width: 1163px) {
-                        .current-roll-css {
-                                        
-                            margin-top: 15px;
-                        margin-left: -200px;
-                                    }
-                    }
-                    /* Desktop Styles */
-                    @media only screen and (min-width: 1164px) {
-                        .current-roll-css {
-                                        
-                            margin-top: 15px; margin-left: -200px;
-                                    }
-                    }
+        /* Mobile Styles */
+        @media only screen and  (max-width: 1018px) {
+                .current-roll-css {
+                                
+                                margin-top: -35px;
+                                margin-left: -95px;
+                            }
+            }
+          
+            /* Tablet Styles */
+          
+            @media only screen and (min-width: 1019px) and (max-width: 1023px) {
+                .current-roll-css {
+                                
+                                margin-top: -35px;
+                                margin-left: -100px;
+                            }
+            }
+            @media only screen and (min-width: 1024px) and (max-width: 1163px) {
+                .current-roll-css {
+                                
+                    margin-top: 15px;
+                margin-left: -200px;
+                            }
+            }
+            /* Desktop Styles */
+            @media only screen and (min-width: 1164px) {
+                .current-roll-css {
+                                
+                    margin-top: 15px; margin-left: -200px;
+                            }
+            }
 
-                    .current-roll {
-                    -webkit-appearance: none;
-                    width:200px;
-                    height: 25px;
-                    /* next line does nothing */
-                    color: #f7a700;
-                    }
-                    .current-roll-css {
-                        height:25px;position: absolute;top:0; z-index: 10; 
-                    }
-                    .current-roll::before {
-                   /* content: '60%'; */
-                   content: attr(data-before);
-                   
-                   top: 0;
-                   z-index: 10;
-                   position:absolute;
-                   color: black;
-                   margin-left: -48%;
-                    }
-                    .current-roll::after {
-                   content: attr(data-after);
-                   top: 0;
-                   z-index: 10;
-                   position:absolute;
-                   color: black;
-                   margin-left: 30%;
-                    }
-                    .previous-roll {
-                    -webkit-appearance: none;
-                    width:200px;
-                    height: 25px;
-                    /* next line does nothing */
-                    color: #98c11e;
-                    /* border-radius: 2px 0px 0px 2px; */
-                    }
-                    .previous-roll-css {
-                        height:50px;position: relative; 
-                        /* margin-left: 35px; */
-                    }
-                    .previous-roll::before {
-                   content: attr(data-before);
-                   top: 0;
-                   z-index: 10;
-                   position:absolute;
-                   color: black;
-                   margin-left: -48%;
-                    }
-                    .previous-roll::after {
-                   content:attr(data-after);
-                   top: 0;
-                   z-index: 10;
-                   position:absolute;
-                   color: black;
-                   margin-left: 30%;
-                    }
-                    progress.previous-roll::-webkit-progress-bar {
-                    border-radius: 10px 0px 0px 10px;
+            .current-roll {
+            -webkit-appearance: none;
+            width:200px;
+            height: 25px;
+            /* next line does nothing */
+            color: #f7a700;
+            }
+            .current-roll-css {
+                height:25px;position: absolute;top:0; z-index: 10; 
+            }
+            .current-roll::before {
+           /* content: '60%'; */
+           content: attr(data-before);
+           
+           top: 0;
+           z-index: 10;
+           position:absolute;
+           color: black;
+           margin-left: -48%;
+            }
+            .current-roll::after {
+           content: attr(data-after);
+           top: 0;
+           z-index: 10;
+           position:absolute;
+           color: black;
+           margin-left: 30%;
+            }
+            .previous-roll {
+            -webkit-appearance: none;
+            width:200px;
+            height: 25px;
+            /* next line does nothing */
+            color: #98c11e;
+            /* border-radius: 2px 0px 0px 2px; */
+            }
+            .previous-roll-css {
+                height:50px;position: relative; 
+                /* margin-left: 35px; */
+            }
+            .previous-roll::before {
+           content: attr(data-before);
+           top: 0;
+           z-index: 10;
+           position:absolute;
+           color: black;
+           margin-left: -48%;
+            }
+            .previous-roll::after {
+           content:attr(data-after);
+           top: 0;
+           z-index: 10;
+           position:absolute;
+           color: black;
+           margin-left: 30%;
+            }
+            progress.previous-roll::-webkit-progress-bar {
+            border-radius: 10px 0px 0px 10px;
 
-                    background: #d8d8d8;
-                    }
-                    progress.previous-roll::-webkit-progress-value {
-                        border-radius: 10px 0px 0px 10px;
+            background: #d8d8d8;
+            }
+            progress.previous-roll::-webkit-progress-value {
+                border-radius: 10px 0px 0px 10px;
 
-                    background: #f7a700;
-                    }
-                    progress.current-roll::-webkit-progress-bar {
-                    background: #98c11e;
-                    }
-                    progress.current-roll::-webkit-progress-value {
-                    background: red;
-                    }
-            </style>
+            background: #f7a700;
+            }
+            progress.current-roll::-webkit-progress-bar {
+            background: #98c11e;
+            }
+            progress.current-roll::-webkit-progress-value {
+            background: red;
+            }
+    </style>
             <style>
                    .tooltip {
               position: relative;
