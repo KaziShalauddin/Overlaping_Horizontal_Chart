@@ -4,6 +4,8 @@
  * (c) 2019 Chart.js Contributors
  * Released under the MIT License
  */
+var abc='ABC';
+var clickedObject={};
 (function (global, factory) {
 typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory(function() { try { return require('moment'); } catch(e) { } }()) :
 typeof define === 'function' && define.amd ? define(['require'], function(require) { return factory(function() { try { return require('moment'); } catch(e) { } }()); }) :
@@ -5418,11 +5420,14 @@ core_defaults._set('doughnut', {
 				return '';
 			},
 			label: function(tooltipItem, data) {
-				//debugger;
-				var object={};
+				//debugger;				
 				var dataLabel =  data.labels[tooltipItem.index];
-				var year=': ' +data.datasets[tooltipItem.datasetIndex].label;
 				var value = ': ' + data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+				
+				var object={};
+				var zone=data.labels[tooltipItem.index];
+				var year=data.datasets[tooltipItem.datasetIndex].label;
+				var _value =data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 
 				if (helpers$1.isArray(dataLabel)) {
 					// show value on first line of multiline label
@@ -5430,15 +5435,16 @@ core_defaults._set('doughnut', {
 					dataLabel = dataLabel.slice();
 					dataLabel[0] += value;
 				} else {
-					//dataLabel+=(year+value);
-					//dataLabel += value;
-					object.dataLabel=dataLabel;
+					dataLabel += value;
+
+					object.zone=zone;
 					object.year=year;
-					object.value=value;
+					object.value=_value;
 				}
 				//console.log(object);
-				//return dataLabel;
-				return object;
+				console.log(year+'-'+dataLabel);
+				clickedObject=object;
+				return dataLabel;	
 
 			}
 		}
@@ -8670,8 +8676,7 @@ var exports$4 = core_element.extend({
 			pushOrConcat(bodyItem.after, splitNewlines(callbacks.afterLabel.call(me, tooltipItem, data)));
 			bodyItems.push(bodyItem);
 		});
-		console.log(bodyItems);
-
+		//console.log(bodyItems);
 		return bodyItems;
 	},
 
