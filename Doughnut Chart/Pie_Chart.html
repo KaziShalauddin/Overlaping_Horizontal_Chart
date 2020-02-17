@@ -1,0 +1,829 @@
+<!-- <!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>pie-chart</title>
+    <link href="Roboto Slab.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+
+    <script src="Chart.js"></script>
+    <script type="text/javascript" src="chartjs-plugin-labels.js"></script>
+    <style type="text/css">
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .chartjs-render-monitor {
+            animation: chartjs-render-animation 0.001s;
+        }
+
+        .chartjs-size-monitor,
+        .chartjs-size-monitor-expand,
+        .chartjs-size-monitor-shrink {
+            position: absolute;
+            direction: ltr;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+            visibility: hidden;
+            z-index: -1;
+        }
+
+        .chartjs-size-monitor-expand>div {
+            position: absolute;
+            width: 1000000px;
+            height: 1000000px;
+            left: 0;
+            top: 0;
+        }
+
+        .chartjs-size-monitor-shrink>div {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            left: 0;
+            top: 0;
+        }
+    </style>
+    <style>
+        /* Card */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Float four columns side by side */
+        .column {
+            float: left;
+            width: 25%;
+            padding: 0 10px;
+        }
+
+        /* Remove extra left and right margins, due to padding */
+        .row {
+            margin: 0 -2px;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+
+        }
+
+        /* Responsive columns */
+        @media screen and (max-width: 600px) {
+            .column {
+                width: 100%;
+                display: block;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Style the counter cards */
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            text-align: center;
+            background-color: #f1f1f1;
+        }
+    </style>
+    <style>
+        #dashboardWrapper h2 {
+            display: block;
+            text-align: left;
+            margin-bottom: 0px;
+            margin-left: 20px;
+            margin: 5px 0px 20px 0px;
+            line-height: 1.2;
+        }
+
+        #dashboardWrapper .chart {
+            float: left;
+            width: 50%;
+            vertical-align: middle;
+            display: inline-block;
+            width: 50% !important;
+            height: 100% !important;
+        }
+
+        #dashboardWrapper .legend {
+            float: left;
+            width: 50%;
+            margin-bottom: 25px;
+        }
+
+        #dashboardWrapper .legendInfo {
+            background-color: #EBEBEB;
+            display: inline-block;
+            padding: 0px 10px 5px 10px;
+            border-radius: 10px;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            box-shadow: 0px 0px 5px #888;
+        }
+
+        #dashboardWrapper .legendInfo span {
+            display: block;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        #dashboardWrapper .chart {
+            margin-bottom: 25px;
+        }
+
+        #dashboardWrapper .chartContainer {
+            padding: 20px 0px;
+        }
+
+        #dashboardWrapper .chartContainer ul {
+            background: none;
+        }
+
+        #dashboardWrapper .chartContainer li {
+            background: none;
+            margin: 0;
+            padding: 0;
+            border: none;
+            color: #666666;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 400;
+            list-style-type: none;
+        }
+
+        #dashboardWrapper .chartContainer li span {
+            background-color: #791b15;
+            height: 20px;
+            min-width: 20px;
+            padding: 2px 3px;
+            display: inline-block;
+            vertical-align: middle;
+            border-radius: 5px;
+            margin-right: 10px;
+            color: #FFF;
+            text-align: center;
+            font-size: 12px;
+            line-height: 18px;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        #dashboardWrapper div.legendValue {
+            float: left;
+            width: 20%;
+        }
+
+        #dashboardWrapper div.legendLabel {
+            float: left;
+            width: 80%;
+        }
+
+        #dashboardWrapper p.label {
+            display: inline-block;
+            margin: 0;
+            margin-right: 10px;
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        #dashboardWrapper p.percentage {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        #dashboardWrapper .dashboardElement {
+            display: inline-block;
+            min-height: 350px;
+            float: left;
+            padding: 0px 20px 0px 2%;
+            margin: 0px;
+            -webkit-transform-origin: 0 0;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -ms-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+
+        #dashboardWrapper .chartContainer li {
+            background: none;
+            margin: 0 0 0 0;
+            padding: 0px 0px 5px 0px;
+            border: none;
+            font-family: 'News Cycle', sans-serif;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            float: right;
+            display: inline;
+            width: 94%;
+        }
+
+        .chartContainer .legend ul li {
+            position: relative;
+            -webkit-transform-origin: 0 0;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -ms-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
+            left: 0px;
+        }
+
+        .chartContainer .legend ul li.breakout {
+            left: -10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header">
+        <h1>pie-chart</h1>
+    </div>
+    <div style="padding-top: 20px;">
+
+        <div class="column">
+            <div class="card">
+                <div id="dashboardWrapper">
+                    <div class="dashboardElement right">
+                        <h2>Accidents by Road Conditions</h2>
+                        <div class="chartContainer" style="position:relative;">
+                            <canvas id="chart-AccidentsByRoadConditions" class="chart" width="200"
+                                height="150"></canvas>
+                            <div id="legend-AccidentsByRoadConditions" class="legend"></div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        var chartAccidentsByRoadConditionsClasses = ["Dry", "Not Available", "Wet", "Icy"];
+        var chartAccidentsByRoadConditionsLabels = ["Dry", "Not Available", "Wet", "Icy"];
+        var chartAccidentsByRoadConditionsData = [31, 3, 3, 1];
+
+        var dataAccidentsByRoadConditions = {
+            labels: chartAccidentsByRoadConditionsLabels,
+            datasets: [{
+                data: chartAccidentsByRoadConditionsData,
+                backgroundColor: ["#82a8c3", "#b24339", "#053454", "#77954b"],
+                hoverBackgroundColor: ["#7597AF", "#A03C33", "#042E4B", "#6B8643"]
+            }]
+        };
+
+        $(document).ready(function () {
+            var canvasAccidentsByRoadConditions = document.getElementById("chart-AccidentsByRoadConditions").getContext("2d");
+            var chartAccidentsByRoadConditions = new Chart(canvasAccidentsByRoadConditions, {
+                type: 'pie',
+                data: dataAccidentsByRoadConditions,
+                options: {
+                    tooltips: {
+                        enabled: false
+                    },
+                    legend: {
+                        display: false,
+                    },
+                    legendCallback: function (chart) {
+                        var text = [];
+                        text.push('<ul>');
+                        for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+                            text.push('<li>');
+                            text.push('<div class="legendValue"><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
+                            text.push(chart.data.datasets[0].data[i] + '</span></div>');
+                            text.push('<div class="legendLabel">');
+                            if (chart.data.labels[i]) { text.push('<p class="label">' + chart.data.labels[i] + '</p>'); }
+                            if (chart.data.datasets[0].data[i]) {
+                                text.push('<p class="percentage">' + chartValueToPercentage(chart.data.datasets[0].data[i], chartAccidentsByRoadConditions.getDatasetMeta(0).total) + '</p>');
+                            }
+                            text.push('</li>');
+                        }
+                        text.push('</ul>');
+                        return text.join("");
+                    }
+                }
+            });
+
+            // Create our legend
+            $('#legend-AccidentsByRoadConditions').prepend(chartAccidentsByRoadConditions.generateLegend());
+
+            // Bind our "Break-Out" Chart function
+            $('#chart-AccidentsByRoadConditions').on('mousemove mouseout', function (e) {
+                var activeSegment = chartAccidentsByRoadConditions.getElementAtEvent(e);
+                pieChartHoverBreakout(this, activeSegment, e);
+            });
+
+            // Tie the legend to the chart tooltips				
+            Chart.helpers.each(document.getElementById('legend-AccidentsByRoadConditions').firstChild.childNodes, function (legendNode, index) {
+                Chart.helpers.addEvent(legendNode, 'mousemove', function () {
+                    highlightActiveSegment(chartAccidentsByRoadConditions, index, true);
+                });
+                Chart.helpers.addEvent(legendNode, 'mouseleave', function () {
+                    highlightActiveSegment(chartAccidentsByRoadConditions, index, false);
+                });
+            });
+        });
+
+        function chartValueToPercentage(value, total) {
+            return Math.floor(((value / total) * 100) + 0.5) + '%';
+        }
+
+        // Function breakout the active "legend item" PieCharts
+        currentBreakoutIndex = null;
+        function pieChartHoverBreakout(oChart, activeSegment, eventType) {
+            try {
+                // First, remove any existing classes with "breakout" from the legend
+                var legend = ($(oChart).parent('.chartContainer').find('.legend'));
+                var segmentIndex = (activeSegment.length && (typeof activeSegment[0]._index != 'undefined' && activeSegment[0]._index !== null)) ? activeSegment[0]._index : -1;
+                var breakout = (eventType.type === 'mousemove') ? true : false;
+                if (currentBreakoutIndex != segmentIndex) {
+                    $.each(legend.find('li'), function (index, value) {
+                        $(this).removeClass('breakout');
+                    });
+                    // Second, if we have a valid segment index and breakout is true
+                    // we add the breakout class to the corresponding li in the legend
+                    if (breakout && segmentIndex >= 0) {
+                        currentBreakoutIndex = segmentIndex;
+                        var targetSegment = legend.find('li').get(segmentIndex);//
+                        $(targetSegment).addClass('breakout');
+                    } else {
+                        currentBreakoutIndex = null;
+                    }
+                }
+            } catch (e) {
+                // Nothing - just prevent errors in console
+                console.log(e);
+            }
+        }
+
+        function highlightActiveSegment(oChart, segmentIndex, highlight) {
+            var activeSegment = oChart.data.datasets[0]._meta[0].data[segmentIndex];
+            oChart.updateHoverStyle([activeSegment], null, highlight);
+            oChart.render();
+        }
+    </script>
+</body>
+
+</html> -->
+
+<html lang="en">
+
+<head>
+    <!-- <meta charset="UTF-8">
+    <link rel="apple-touch-icon" type="image/png"
+        href="https://static.codepen.io/assets/favicon/apple-touch-icon-5ae1a0698dcc2402e9712f7d01ed509a57814f994c660df9f7a952f3060705ee.png">
+    <meta name="apple-mobile-web-app-title" content="CodePen">
+    <link rel="shortcut icon" type="image/x-icon"
+        href="https://static.codepen.io/assets/favicon/favicon-aec34940fbc1a6e787974dcd360f2c6b63348d4b1f4e06c77743096d55480f33.ico">
+    <link rel="mask-icon" type=""
+        href="https://static.codepen.io/assets/favicon/logo-pin-8f3771b1072e3c38bd662872f6b673a722f4b3ca2421637d5596661b4e2132cc.svg"
+        color="#111"> -->
+    <meta charset="UTF-8">
+    <title>pie-chart</title>
+    <link href="Roboto Slab.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Card */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Float four columns side by side */
+        .column {
+            float: left;
+            width: 50%;
+            padding: 0 10px;
+            height: 80%;
+        }
+
+        /* Remove extra left and right margins, due to padding */
+        .row {
+            margin: 0 -2px;
+        }
+
+        /* Clear floats after the columns */
+        .row:after {
+            content: "";
+            display: table;
+            clear: both;
+
+        }
+
+        /* Responsive columns */
+        @media screen and (max-width: 600px) {
+            .column {
+                width: 100%;
+                display: block;
+                margin-bottom: 20px;
+            }
+        }
+
+        /* Style the counter cards */
+        .card {
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            padding: 16px;
+            text-align: center;
+            background-color: #f1f1f1;
+        }
+    </style>
+    <style>
+        #dashboardWrapper h2 {
+            display: block;
+            text-align: left;
+            margin-bottom: 0px;
+            margin-left: 20px;
+            margin: 5px 0px 20px 0px;
+            line-height: 1.2;
+        }
+
+        #dashboardWrapper .chart {
+            float: left;
+            width: 50%;
+            vertical-align: middle;
+            display: inline-block;
+            width: 50% !important;
+            height: 100% !important;
+        }
+
+        #dashboardWrapper .legend {
+            float: left;
+            width: 50%;
+            margin-bottom: 25px;
+        }
+
+        #dashboardWrapper .legendInfo {
+            background-color: #EBEBEB;
+            display: inline-block;
+            padding: 0px 10px 5px 10px;
+            border-radius: 10px;
+            -webkit-border-radius: 10px;
+            -moz-border-radius: 10px;
+            box-shadow: 0px 0px 5px #888;
+        }
+
+        #dashboardWrapper .legendInfo span {
+            display: block;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        #dashboardWrapper .chart {
+            margin-bottom: 25px;
+        }
+
+        #dashboardWrapper .chartContainer {
+            padding: 20px 0px;
+        }
+
+        #dashboardWrapper .chartContainer ul {
+            background: none;
+        }
+
+        #dashboardWrapper .chartContainer li {
+            background: none;
+            margin: 0;
+            padding: 0;
+            border: none;
+            color: #666666;
+            font-size: 16px;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-weight: 400;
+            list-style-type: none;
+        }
+
+        #dashboardWrapper .chartContainer li span {
+            background-color: #791b15;
+            height: 20px;
+            min-width: 20px;
+            padding: 2px 3px;
+            display: inline-block;
+            vertical-align: middle;
+            border-radius: 5px;
+            margin-right: 10px;
+            color: #FFF;
+            text-align: center;
+            font-size: 12px;
+            line-height: 18px;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        #dashboardWrapper div.legendValue {
+            float: left;
+            width: 20%;
+        }
+
+        #dashboardWrapper div.legendLabel {
+            float: left;
+            width: 80%;
+        }
+
+        #dashboardWrapper p.label {
+            display: inline-block;
+            margin: 0;
+            margin-right: 10px;
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        #dashboardWrapper p.percentage {
+            display: inline-block;
+            margin: 0;
+            padding: 0;
+            vertical-align: middle;
+        }
+
+        #dashboardWrapper .dashboardElement {
+            display: inline-block;
+            min-height: 350px;
+            float: left;
+            padding: 0px 20px 0px 2%;
+            margin: 0px;
+            -webkit-transform-origin: 0 0;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -ms-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
+        }
+
+        #dashboardWrapper .chartContainer li {
+            background: none;
+            margin: 0 0 0 0;
+            padding: 0px 0px 5px 0px;
+            border: none;
+            font-family: 'News Cycle', sans-serif;
+            font-size: 12px;
+            white-space: nowrap;
+            cursor: pointer;
+            float: right;
+            display: inline;
+            width: 94%;
+        }
+
+        .chartContainer .legend ul li {
+            position: relative;
+            -webkit-transform-origin: 0 0;
+            -moz-transform-origin: 0 0;
+            -o-transform-origin: 0 0;
+            -ms-transform-origin: 0 0;
+            -webkit-transition: all 0.3s;
+            -moz-transition: all 0.3s;
+            -ms-transition: all 0.3s;
+            -o-transition: all 0.3s;
+            transition: all 0.3s;
+            left: 0px;
+        }
+
+        .chartContainer .legend ul li.breakout {
+            left: -10px;
+        }
+    </style>
+    <!-- <script>
+        window.console = window.console || function (t) { };
+    </script>
+    <script>
+        if (document.location.search.match(/type=embed/gi)) {
+            window.parent.postMessage("resize", "*");
+        }
+    </script> -->
+</head>
+
+<body>
+    <div id="header">
+        <h1>pie-chart</h1>
+    </div>
+    <div style="padding-top: 20px;">
+
+        <div class="column">
+            <div class="card">
+
+                <div id="dashboardWrapper">
+
+                    <div class="dashboardElement right ">
+
+                        <h2>Accidents by Road Conditions</h2>
+
+                        <div class="chartContainer" style="position:relative;">
+                            <!-- <iframe class="chartjs-hidden-iframe"
+                                tabindex="-1"
+                                style="display: block; overflow: hidden; border: 0px; margin: 0px; top: 0px; left: 0px; bottom: 0px; right: 0px; height: 100%; width: 100%; position: absolute; pointer-events: none; z-index: -1;"></iframe>
+                            -->
+
+                            <canvas id="chart-AccidentsByRoadConditions" class="chart" width="862" height="646"
+                                style="display: block; height: 431px; width: 575px;"></canvas>
+                            <div id="legend-AccidentsByRoadConditions" class="legend">
+                                <!-- <ul>
+                        <li class="">
+                            <div class="legendValue"><span style="background-color:#82a8c3">31</span></div>
+                            <div class="legendLabel">
+                                <p class="label">Dry</p>
+                                <p class="percentage">82%</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="legendValue"><span style="background-color:#b24339">3</span></div>
+                            <div class="legendLabel">
+                                <p class="label">Not Available</p>
+                                <p class="percentage">8%</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="legendValue"><span style="background-color:#053454">3</span></div>
+                            <div class="legendLabel">
+                                <p class="label">Wet</p>
+                                <p class="percentage">8%</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="legendValue"><span style="background-color:#77954b">1</span></div>
+                            <div class="legendLabel">
+                                <p class="label">Icy</p>
+                                <p class="percentage">3%</p>
+                            </div>
+                        </li>
+                    </ul> -->
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <div style="clear: both"></div>
+
+            </div>
+
+        </div>
+        <!-- <script>
+            window.HUB_EVENTS = { ASSET_ADDED: "ASSET_ADDED", ASSET_DELETED: "ASSET_DELETED", ASSET_DESELECTED: "ASSET_DESELECTED", ASSET_SELECTED: "ASSET_SELECTED", ASSET_UPDATED: "ASSET_UPDATED", 
+            CONSOLE_CHANGE: "CONSOLE_CHANGE", CONSOLE_CLOSED: "CONSOLE_CLOSED", CONSOLE_EVENT: "CONSOLE_EVENT", CONSOLE_OPENED: "CONSOLE_OPENED", CONSOLE_RUN_COMMAND: "CONSOLE_RUN_COMMAND",
+             CONSOLE_SERVER_CHANGE: "CONSOLE_SERVER_CHANGE", EMBED_ACTIVE_PEN_CHANGE: "EMBED_ACTIVE_PEN_CHANGE", EMBED_ACTIVE_THEME_CHANGE: "EMBED_ACTIVE_THEME_CHANGE", EMBED_ATTRIBUTE_CHANGE: "EMBED_ATTRIBUTE_CHANGE", EMBED_RESHOWN: "EMBED_RESHOWN", FORMAT_FINISH: "FORMAT_FINISH", 
+             FORMAT_START: "FORMAT_START", IFRAME_PREVIEW_RELOAD_CSS: "IFRAME_PREVIEW_RELOAD_CSS", IFRAME_PREVIEW_URL_CHANGE: "IFRAME_PREVIEW_URL_CHANGE", KEY_PRESS: "KEY_PRESS", LINTER_FINISH: "LINTER_FINISH", LINTER_START: "LINTER_START", PEN_CHANGE_SERVER: "PEN_CHANGE_SERVER", PEN_CHANGE: "PEN_CHANGE", 
+             PEN_EDITOR_CLOSE: "PEN_EDITOR_CLOSE", PEN_EDITOR_CODE_FOLD: "PEN_EDITOR_CODE_FOLD", PEN_EDITOR_ERRORS: "PEN_EDITOR_ERRORS", PEN_EDITOR_EXPAND: "PEN_EDITOR_EXPAND", PEN_EDITOR_FOLD_ALL: "PEN_EDITOR_FOLD_ALL", 
+             PEN_EDITOR_LOADED: "PEN_EDITOR_LOADED", PEN_EDITOR_REFRESH_REQUEST: "PEN_EDITOR_REFRESH_REQUEST", PEN_EDITOR_RESET_SIZES: "PEN_EDITOR_RESET_SIZES", PEN_EDITOR_SIZES_CHANGE: "PEN_EDITOR_SIZES_CHANGE", PEN_EDITOR_UI_CHANGE_SERVER: "PEN_EDITOR_UI_CHANGE_SERVER", PEN_EDITOR_UI_CHANGE: "PEN_EDITOR_UI_CHANGE", 
+             PEN_EDITOR_UI_DISABLE: "PEN_EDITOR_UI_DISABLE", PEN_EDITOR_UI_ENABLE: "PEN_EDITOR_UI_ENABLE", PEN_EDITOR_UNFOLD_ALL: "PEN_EDITOR_UNFOLD_ALL", PEN_ERROR_INFINITE_LOOP: "PEN_ERROR_INFINITE_LOOP", PEN_ERROR_RUNTIME: "PEN_ERROR_RUNTIME", PEN_ERRORS: "PEN_ERRORS", PEN_LIVE_CHANGE: "PEN_LIVE_CHANGE", PEN_LOGS: "PEN_LOGS",
+              PEN_MANIFEST_CHANGE: "PEN_MANIFEST_CHANGE", PEN_MANIFEST_FULL: "PEN_MANIFEST_FULL", PEN_PREVIEW_FINISH: "PEN_PREVIEW_FINISH", PEN_PREVIEW_START: "PEN_PREVIEW_START", PEN_SAVED: "PEN_SAVED", POPUP_CLOSE: "POPUP_CLOSE", POPUP_OPEN: "POPUP_OPEN", POST_CHANGE: "POST_CHANGE", POST_SAVED: "POST_SAVED", PROCESSING_FINISH: "PROCESSING_FINISH", 
+              PROCESSING_START: "PROCESSED_STARTED" }, "object" != typeof window.CP && (window.CP = {}), window.CP.PenTimer = { programNoLongerBeingMonitored: !1, timeOfFirstCallToShouldStopLoop: 0, _loopExits: {}, _loopTimers: {}, START_MONITORING_AFTER: 2e3, STOP_ALL_MONITORING_TIMEOUT: 5e3, MAX_TIME_IN_LOOP_WO_EXIT: 2200, 
+              exitedLoop: function (E) { this._loopExits[E] = !0 }, shouldStopLoop: function (E) { if (this.programKilledSoStopMonitoring) return !0; if (this.programNoLongerBeingMonitored) return !1; if (this._loopExits[E]) return !1; var _ = this._getTime(); if (0 === this.timeOfFirstCallToShouldStopLoop) return this.timeOfFirstCallToShouldStopLoop = _, !1;
+               var o = _ - this.timeOfFirstCallToShouldStopLoop; if (o < this.START_MONITORING_AFTER) return !1; if (o > this.STOP_ALL_MONITORING_TIMEOUT) return this.programNoLongerBeingMonitored = !0, !1; try { this._checkOnInfiniteLoop(E, _) } catch (N) { return this._sendErrorMessageToEditor(), this.programKilledSoStopMonitoring = !0, !0 } return !1 },
+               _sendErrorMessageToEditor: function () { try { if (this._shouldPostMessage()) { var E = { topic: HUB_EVENTS.PEN_ERROR_INFINITE_LOOP, data: { line: this._findAroundLineNumber() } }; parent.postMessage(E, "*") } else this._throwAnErrorToStopPen() } catch (_) { this._throwAnErrorToStopPen() } }, _shouldPostMessage: function () { return document.location.href.match(/boomerang/) },
+                _throwAnErrorToStopPen: function () { throw "We found an infinite loop in your Pen. We've stopped the Pen from running. Please correct it or contact support@codepen.io." }, _findAroundLineNumber: function () { var E = new Error, _ = 0; if (E.stack) { var o = E.stack.match(/boomerang\S+:(\d+):\d+/); o && (_ = o[1]) } return _ },
+                 _checkOnInfiniteLoop: function (E, _) { if (!this._loopTimers[E]) return this._loopTimers[E] = _, !1; var o; if (_ - this._loopTimers[E] > this.MAX_TIME_IN_LOOP_WO_EXIT) throw "Infinite Loop found on loop: " + E }, _getTime: function () { return +new Date } }, 
+                 window.CP.shouldStopExecution = function (E) { var _ = window.CP.PenTimer.shouldStopLoop(E); return !0 === _ && console.warn("[CodePen]: An infinite loop (or a loop taking too long) was detected, so we stopped its execution. Sorry!"), _ }, window.CP.exitedLoop = function (E) { window.CP.PenTimer.exitedLoop(E) };
+        </script> -->
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+        <script>
+            var chartAccidentsByRoadConditionsClasses = ["Dry", "Not Available", "Wet", "Icy"];
+            var chartAccidentsByRoadConditionsLabels = ["Dry", "Not Available", "Wet", "Icy"];
+            var chartAccidentsByRoadConditionsData = [31, 3, 3, 1];
+
+            var dataAccidentsByRoadConditions = {
+                labels: chartAccidentsByRoadConditionsLabels,
+                datasets: [{
+                    data: chartAccidentsByRoadConditionsData,
+                    backgroundColor: ["#82a8c3", "#b24339", "#053454", "#77954b"],
+                    hoverBackgroundColor: ["#7597AF", "#A03C33", "#042E4B", "#6B8643"]
+                }]
+            };
+
+
+
+            $(document).ready(function () {
+                var canvasAccidentsByRoadConditions = document.getElementById("chart-AccidentsByRoadConditions").getContext("2d");
+                var chartAccidentsByRoadConditions = new Chart(canvasAccidentsByRoadConditions, {
+                    type: 'pie',
+                    data: dataAccidentsByRoadConditions,
+                    options: {
+                        tooltips: {
+                            enabled: false
+                        },
+
+                        legend: {
+                            display: false
+                        },
+
+                        legendCallback: function (chart) {
+                            var text = [];
+                            text.push('<ul>');
+                            for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+                                // if (window.CP.shouldStopExecution(0)) break;
+                                text.push('<li>');
+                                text.push('<div class="legendValue"><span style="background-color:' + chart.data.datasets[0].backgroundColor[i] + '">');
+                                text.push(chart.data.datasets[0].data[i] + '</span></div>');
+                                text.push('<div class="legendLabel">');
+                                if (chart.data.labels[i]) { text.push('<p class="label">' + chart.data.labels[i] + '</p>'); }
+                                if (chart.data.datasets[0].data[i]) {
+                                    text.push('<p class="percentage">' + chartValueToPercentage(chart.data.datasets[0].data[i], chartAccidentsByRoadConditions.getDatasetMeta(0).total) + '</p>');
+                                }
+                                text.push('</li>');
+                            };
+                             //window.CP.exitedLoop(0);
+                            text.push('</ul>');
+                            return text.join("");
+                        }
+                    }
+                });
+
+
+
+                // Create our legend
+                $('#legend-AccidentsByRoadConditions').prepend(chartAccidentsByRoadConditions.generateLegend());
+
+                // Bind our "Break-Out" Chart function
+                $('#chart-AccidentsByRoadConditions').on('mousemove mouseout', function (e) {
+                    var activeSegment = chartAccidentsByRoadConditions.getElementAtEvent(e);
+                    pieChartHoverBreakout(this, activeSegment, e);
+                });
+
+                // Tie the legend to the chart tooltips				
+                Chart.helpers.each(document.getElementById('legend-AccidentsByRoadConditions').firstChild.childNodes, function (legendNode, index) {
+                    Chart.helpers.addEvent(legendNode, 'mousemove', function () {
+                        highlightActiveSegment(chartAccidentsByRoadConditions, index, true);
+                    });
+                    Chart.helpers.addEvent(legendNode, 'mouseleave', function () {
+                        highlightActiveSegment(chartAccidentsByRoadConditions, index, false);
+                    });
+                });
+            });
+
+            function chartValueToPercentage(value, total) {
+                return Math.floor(value / total * 100 + 0.5) + '%';
+            }
+
+            // Function breakout the active "legend item" PieCharts
+            currentBreakoutIndex = null;
+            function pieChartHoverBreakout(oChart, activeSegment, eventType) {
+                try {
+                    // First, remove any existing classes with "breakout" from the legend
+                    var legend = $(oChart).parent('.chartContainer').find('.legend');
+                    var segmentIndex = activeSegment.length && typeof activeSegment[0]._index != 'undefined' && activeSegment[0]._index !== null ? activeSegment[0]._index : -1;
+                    var breakout = eventType.type === 'mousemove' ? true : false;
+                    if (currentBreakoutIndex != segmentIndex) {
+                        $.each(legend.find('li'), function (index, value) {
+                            $(this).removeClass('breakout');
+                        });
+                        // Second, if we have a valid segment index and breakout is true
+                        // we add the breakout class to the corresponding li in the legend
+                        if (breakout && segmentIndex >= 0) {
+                            currentBreakoutIndex = segmentIndex;
+                            var targetSegment = legend.find('li').get(segmentIndex); //
+                            $(targetSegment).addClass('breakout');
+                        } else {
+                            currentBreakoutIndex = null;
+                        }
+                    }
+                } catch (e) {
+                    // Nothing - just prevent errors in console
+                    console.log(e);
+                }
+            }
+
+            function highlightActiveSegment(oChart, segmentIndex, highlight) {
+                var activeSegment = oChart.data.datasets[0]._meta[0].data[segmentIndex];
+                oChart.updateHoverStyle([activeSegment], null, highlight);
+                oChart.render();
+            }
+        //# sourceURL=pen.js
+        </script>
+
+
+    </div>
+
+</body>
+
+</html>
